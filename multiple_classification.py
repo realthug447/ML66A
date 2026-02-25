@@ -64,32 +64,36 @@ default_map = {
 if (selected == 'BMI'):
     st.title('BMI Classification')
     
-    gender_map = {'Male': 0, 'Female': 1}
-
-    person_gender = st.selectbox('Gender', list(gender_map.keys()))
-   
-    person_height = st.number_input('Height', min_value=0, value=170)
-
-    person_weight = st.number_input('Weight', min_value=0, value=60)
+    person_gender = st.selectbox('Gender', ['Male', 'Female'])
+    person_height = st.number_input('Height (cm)', min_value=0, value=170)
+    person_weight = st.number_input('Weight (kg)', min_value=0, value=60)
     
-    bmi_prediction = ''
+    bmi_labels = {
+        0: 'Extremely Weak',
+        1: 'Weak',
+        2: 'Normal',
+        3: 'Overweight',
+        4: 'Obesity',
+        5: 'Extreme Obesity'
+    }
     
     if st.button('Predict'):
-        prediction = bmi_model.predict([
-            [
-                gender_map[person_gender],
-                float(person_height), 
-                float(person_weight)
-            ]
-        ])
+        gender_val = 0 if person_gender == 'Male' else 1
         
-
-        if prediction[0] == 0:
-            bmi_prediction = 'Not Accept'
-        else:
-            bmi_prediction = 'Accept'
+        prediction = bmi_model.predict([[
+            gender_val, 
+            float(person_height), 
+            float(person_weight)
+        ]])
+        
+        result_index = int(prediction[0])
+        
+        if result_index in bmi_labels:
+            bmi_prediction = bmi_labels[result_index]
             
-        st.success(f'Result: {bmi_prediction}')
+            st.success(f'Your Result is: **{bmi_prediction}** (Index {result_index})')
+        else:
+            st.error('Prediction index out of range.')
     
 if (selected == 'Loan'):
     st.title('Loan Classification')
@@ -159,4 +163,5 @@ if(selected == 'Riding'):
           
 
     st.success(Riding_prediction)
+
 
