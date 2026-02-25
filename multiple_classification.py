@@ -68,6 +68,7 @@ if (selected == 'BMI'):
     person_height = st.number_input('Height (cm)', min_value=0, value=170)
     person_weight = st.number_input('Weight (kg)', min_value=0, value=60)
     
+
     bmi_labels = {
         0: 'Extremely Weak',
         1: 'Weak',
@@ -78,6 +79,7 @@ if (selected == 'BMI'):
     }
     
     if st.button('Predict'):
+        
         gender_val = 0 if person_gender == 'Male' else 1
         
         prediction = bmi_model.predict([[
@@ -86,14 +88,9 @@ if (selected == 'BMI'):
             float(person_weight)
         ]])
         
-        result_index = int(prediction[0])
+        result_label = bmi_labels.get(int(prediction[0]), "Unknown")
         
-        if result_index in bmi_labels:
-            bmi_prediction = bmi_labels[result_index]
-            
-            st.success(f'Your Result is: **{bmi_prediction}** (Index {result_index})')
-        else:
-            st.error('Prediction index out of range.')
+        st.success(f'ผลการทำนายคือ: **{result_label}**')
     
 if (selected == 'Loan'):
     st.title('Loan Classification')
@@ -163,5 +160,6 @@ if(selected == 'Riding'):
           
 
     st.success(Riding_prediction)
+
 
 
